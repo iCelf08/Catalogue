@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Categories and Products</title>
+</head>
+<body>
+  <h1>Categories and Products</h1>
+
+  {% for category in categories %}
+    <h2>{{ category }}</h2>
+
+    {% for product in products_by_category.items %}
+      {% if product.0 == category %}
+        {% for p in product.1 %}
+          <p>{{ p.name }}</p>
+        {% endfor %}
+      {% endif %}
+    {% empty %}
+      <p>No products found.</p>
+    {% endfor %}
+
+    <hr>
+  {% empty %}
+    <p>No categories found.</p>
+  {% endfor %}
+</body>
+</html>
