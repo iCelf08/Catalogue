@@ -25,8 +25,23 @@ import uuid
         return self.name"""
 
 
-class Product(models.Model):
+class Category(models.Model):
+    CATEGORY_CHOICES = [
+        ("Fruits",'Fruits'),
+        ('Sweets','Sweets'),
+        ('juices','juices'),
+        ('snakes','snakes'),
+        ('salties','salties'),
+    ]
+
     id = models.UUIDField(default=uuid.uuid4, primary_key=True, unique=True, db_index=True)
+    name = models.CharField(max_length=200, choices=CATEGORY_CHOICES)
+
+    def __str__(self):
+        return self.name
+
+class Product(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=200, null= False)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.TextField(max_length=600)
@@ -34,12 +49,11 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     stock = models.PositiveIntegerField()
     image = models.ImageField(upload_to="img/Product_images/", default=None, null=True)
-    category = models.CharField(max_length=200, null=False)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     
     def __str__(self):
         return self.name
     
-class Category(models.Model):
-    id = models.UUIDField(default=uuid.uuid4, primary_key=True, unique=True, db_index=True)
-    name = models.CharField(max_length=200, null=False)
+    class Meta:
+        ordering = ['stock']
     
