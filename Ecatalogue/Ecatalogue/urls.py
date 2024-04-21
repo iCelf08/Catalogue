@@ -5,7 +5,9 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import routers
-from core.views import ProductViewSet, CategoryViewSet
+from django.conf import settings
+from django.conf.urls.static import static
+from core.views import ProductViewSet
 from core.urls import router
 
 schema_view = get_schema_view(
@@ -23,16 +25,17 @@ schema_view = get_schema_view(
 
 router = routers.DefaultRouter()
 router.register('products', ProductViewSet)
-router.register('Categories', CategoryViewSet)
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/', include(router.urls)),
-    path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-    path('login/', include('django.contrib.auth.urls')),
 
-]
+urlpatterns = [
+   path('admin/', admin.site.urls),
+   path('api/', include(router.urls)),
+   path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+   path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+   path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+   path('login/', include('django.contrib.auth.urls')),
+   path("__reload__/", include("django_browser_reload.urls")),
+   path("api-auth/", include('rest_framework.urls', namespace='rest_framework'))
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
 

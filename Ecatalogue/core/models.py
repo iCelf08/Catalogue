@@ -1,59 +1,34 @@
 from django.db import models
-
-import uuid 
-
-"""class User(models.Model):
-    id = models.UUIDField(default=uuid.uuid4, primary_key=True, unique=True, db_index=True)
-    username = models.CharField(max_length=50, blank=False, db_index=True)
-    first_name = models.CharField(max_length=40, blank=False)
-    last_name = models.CharField(max_length=40, blank=False)
-    email = models.EmailField(max_length=200, unique=True, db_index=True)
-    phonenumber = models.CharField(max_length=12)
-    password = models.CharField(max_length=200)
-    created_at = models.DateTimeField(auto_now_add=True)
-    Profil = models.ImageField(upload_to="img/User_images/", default=None, null=True) 
-    
-    def __str__(self):
-        return self.username"""
-    
-    
-"""class Category(models.Model):
-    id = models.UUIDField(default=uuid.uuid4, primary_key=True, unique=True, db_index=True)
-    name = models.CharField(max_length=200, null=False)
-    
-    def __str__(self):
-        return self.name"""
-
+from django.contrib.auth.models import User
 
 class Category(models.Model):
-    CATEGORY_CHOICES = [
-        ("Fruits",'Fruits'),
-        ('Sweets','Sweets'),
-        ('juices','juices'),
-        ('snakes','snakes'),
-        ('salties','salties'),
-    ]
-
-    id = models.UUIDField(default=uuid.uuid4, primary_key=True, unique=True, db_index=True)
-    name = models.CharField(max_length=200, choices=CATEGORY_CHOICES)
+    name = models.CharField(max_length=200)
 
     def __str__(self):
         return self.name
 
 class Product(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=200, null= False)
+    class ProductsObjects(models.Manager):
+        def get_queryset(self):
+            return super().get_queryset().filter(status='available')
+
+    options = (
+        ('non_available', 'Non-available'),
+        ('available', 'Available'),
+    )
+    slug = models.SlugField(max_length=200, unique=True)
+    category = models.ForeignKey(Category, on_delete=models.PROTECT)
+    name = models.CharField(max_length=200)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.TextField(max_length=600)
-    available = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     stock = models.PositiveIntegerField()
-    image = models.ImageField(upload_to="img/Product_images/", default=None, null=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    
+    image = models.ImageField(upload_to="images/", null=True, blank=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='catalogue_products')
+    status = models.CharField(max_length=20, choices=options, default='available')
+
+    objects = models.Manager()  # The default manager.
+    productsobjects = ProductsObjects()  # Our custom manager.
+
     def __str__(self):
         return self.name
-    
-    class Meta:
-        ordering = ['stock']
-    
