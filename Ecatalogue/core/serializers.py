@@ -15,11 +15,13 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = '__all__'
 
+
 class CategorySerializer(serializers.ModelSerializer):
-    
+    products = ProductSerializer(many=True, read_only=True, source='product_set')  # Adjust the source if needed
+
     class Meta:
         model = Category
-        fields = ('id', 'name')   
+        fields = ['id', 'name', 'products']
         
         
 class AuthenticateSerializer(TokenObtainPairSerializer):

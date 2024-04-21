@@ -56,7 +56,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         
     def get_object(self,queryset=None, **kwargs):
         item = self.kwargs.get('pk')
-        return get_object_or_404(Product, name=item)
+        return get_object_or_404(Product, id=item)
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -66,4 +66,11 @@ class CategoryViewSet(viewsets.ModelViewSet):
     
     def get_object(self,queryset=None, **kwargs):
         item = self.kwargs.get('pk')
-        return get_object_or_404(Category, name=item)
+        return get_object_or_404(Category, id=item)
+    
+    def get_queryset(self):
+        queryset = Product.objects.all()
+        category_id = self.kwargs.get('pk')
+        if category_id is not None:
+            queryset = queryset.filter(category_id=category_id)
+        return queryset
