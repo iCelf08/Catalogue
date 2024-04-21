@@ -27,8 +27,8 @@ class Product(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='catalogue_products')
     status = models.CharField(max_length=20, choices=options, default='available')
 
-    objects = models.Manager()  # The default manager.
-    productsobjects = ProductsObjects()  # Our custom manager.
+    objects = models.Manager()
+    productsobjects = ProductsObjects()
 
     def __str__(self):
         return self.name
