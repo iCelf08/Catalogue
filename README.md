@@ -1,6 +1,6 @@
 # ECatalogue
 
-ECatalogue is a web application designed to manage and display products within various catalogs. It uses Django and Django REST Framework for the backend, PostgreSQL for database management, and JWT for secure user authentication. The frontend is built with React and Material-UI, leveraging Axios for efficient HTTP requests.
+ECatalogue is a web application designed to manage and display products within various categories. It uses Django and Django REST Framework for the backend, PostgreSQL for database management, and JWT for secure user authentication. The frontend is built with React and Material-UI, leveraging Axios for efficient HTTP requests.
 
 ## Features
 
